@@ -4,40 +4,6 @@ A full-stack AI application that allows users to upload a PDF, generate a summar
 
 The application uses Retrieval-Augmented Generation (RAG) to retrieve relevant sections from the PDF before generating answers. This helps ensure responses are grounded in the uploaded document and include page references.
 
-## Features
-
-- Upload text-based PDF files
-- Extract and split PDF content into chunks
-- Generate and store embeddings in Pinecone
-- Automatically summarize uploaded documents
-- Ask questions through an AI chat interface
-- Retrieve relevant document sections using semantic search
-- Return answers with page citations
-- Delete document vectors after removing a PDF
-- Support switching from OpenAI to Ollama later
-
-## Tech Stack
-
-### Frontend
-
-- Next.js App Router
-- TypeScript
-- React
-- Tailwind CSS
-- CopilotKit
-- AG-UI Client
-
-### Backend
-
-- Python
-- FastAPI
-- LangChain
-- LangGraph
-- OpenAI
-- Pinecone
-- PyPDF
-- AG-UI LangGraph
-
 ## Architecture
 
 ```mermaid
@@ -119,6 +85,40 @@ Instead, it:
 5. Searches for chunks related to the user's question.
 6. Sends only the relevant chunks to the language model.
 7. Generates an answer with page citations.
+
+## Features
+
+- Upload text-based PDF files
+- Extract and split PDF content into chunks
+- Generate and store embeddings in Pinecone
+- Automatically summarize uploaded documents
+- Ask questions through an AI chat interface
+- Retrieve relevant document sections using semantic search
+- Return answers with page citations
+- Delete document vectors after removing a PDF
+- Support switching from OpenAI to Ollama later
+
+## Tech Stack
+
+### Frontend
+
+- Next.js App Router
+- TypeScript
+- React
+- Tailwind CSS
+- CopilotKit
+- AG-UI Client
+
+### Backend
+
+- Python
+- FastAPI
+- LangChain
+- LangGraph
+- OpenAI
+- Pinecone
+- PyPDF
+- AG-UI LangGraph
 
 ## Project Structure
 
