@@ -1,37 +1,50 @@
 from functools import lru_cache
-from typing import Literal
 
-from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from pinecone import Pinecone, ServerlessSpec
 
+from app.core.config import settings
 
-class Settings(BaseSettings):
-    app_env: Literal["development", "test", "production"] = "development"
-
-    openai_api_key: str
-
-    pinecone_api_key: str
-    pinecone_index_name: str = "pdf-ai-assistant"
-    pinecone_cloud: str = "aws"
-    pinecone_region: str = "us-east-1"
-
-    chat_model: str = "gpt-4.1-mini"
-    embedding_model: str = "text-embedding-3-small"
-
-    max_upload_size_mb: int = Field(default=20, ge=1, le=100)
-    frontend_origin: str = "http://localhost:3000"
-
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore",
-    )
-
+EMBEDDING_DIMENSION = 1536
 
 @lru_cache
-def get_settings() -> Settings:
-    return Settings()
+def get_embeddings() -> OpenAIEmbeddings:
+	return OpenAIEmbeddings(
+		model=settings.embedding_model,
+		api_key=settings.openai_api_key,
+	)
 
+@lru_cache
+def get_pinecone_client() -> Pinecone:
+	return Pinecone(api_key=settings.pinecone_api_key)
 
-settings = get_settings()
+def ensure_pinecone_index() -> None:
+	client = get_pinecone_client()
+
+	if not client.has_index(settings.pinecone_index_name):
+		client.create_index(
+			name=settings.pinecone_index_name,
+			dimension=EMBEDDING_DIMENSION,
+			metric="cosine",
+			spec=ServerlessSpec(
+				cloud=settings.pinecone_cloud,
+				region=settings.pinecone_region
+			),
+			deletion_protection="disabled"
+		)
+
+def get_vector_store(namespace: str) -> PineconeVectorStore:
+	client = get_pinecone_client()
+	index = client.Index(settings.pinecone_index_name)
+
+	return PineconeVectorStore(
+		index=index,
+		embedding=get_embeddings(),
+		namespace=namespace
+	)
+
+def delete_namespace(namespace: str) -> None:
+	client = get_pinecone_client()
+	index = client.Index(settings.pinecone_index_name)
+	index.delete(delete_all=True, namespace=namespace)
