@@ -218,28 +218,6 @@ Frontend:
 http://localhost:3000
 ```
 
-## Current Limitations
-
-- Only text-based PDFs are supported
-- Scanned PDFs require OCR
-- The original PDF is not permanently stored
-- Authentication is not implemented
-- Only one active document is supported
-- Document processing runs inside the upload request
-- Pinecone vectors may remain after a browser refresh
-
-## Future Improvements
-
-- Ollama support
-- OCR for scanned PDFs
-- Multiple documents per conversation
-- User authentication and document ownership
-- Background PDF processing
-- Conversation history
-- Hybrid search and reranking
-- Structured citation links
-- Cost and token usage tracking
-
 ## License
 
 This project is intended for learning and experimentation.
