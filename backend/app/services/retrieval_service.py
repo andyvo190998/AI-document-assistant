@@ -9,8 +9,8 @@ class RetriedChunk:
 	score: float
 
 class RetrievalService:
+	@staticmethod
 	def search(
-			self,
 			document_id: str,
 			query: str,
 			limit: int = 6,

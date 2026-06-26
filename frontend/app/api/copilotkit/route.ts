@@ -1,23 +1,13 @@
-import { HttpAgent } from "@ag-ui/client";
-import { CopilotRuntime, createCopilotRuntimeHandler } from "@copilotkit/runtime/v2";
+import { createCopilotRuntimeHandler } from "@copilotkit/runtime/v2";
 
-const backendUrl = process.env.BACKEND_URL;
-
-if (!backendUrl) {
-	throw new Error("BACKEND_URL is not defined");
-}
-
-const runtime = new CopilotRuntime({
-	agents: {
-		default: new HttpAgent({
-			url: `${backendUrl}/agent`,
-		}),
-	},
-});
+import { runtime } from "./runtime";
 
 const handler = createCopilotRuntimeHandler({
 	runtime,
 	basePath: "/api/copilotkit",
+	mode: "single-route",
 });
 
-export { handler as GET, handler as POST };
+export const GET = handler;
+export const POST = handler;
+export const OPTIONS = handler;
